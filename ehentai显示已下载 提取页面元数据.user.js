@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ehentai显示已下载 提取页面元数据
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      1.1
 // @description  try to take over the world!
 // @author       You
 // @match        *exhentai.org/*
@@ -57,7 +57,9 @@ text-align: center;
 }
     `);
     'use strict';
+    var port=8080;
     var ehid;
+
     var url=window.location.href;
     $("body").prepend("<div class='copyed'>元数据已复制到剪切板</div>");
     if(url.indexOf("hentai.org/g/")!=-1){
@@ -68,7 +70,7 @@ text-align: center;
         });
         ehid='["/'+url.split("/")[4]+'/"]';
         $.ajax({
-            url: "http://localhost:8080/data.php",  // 请求的URL
+            url: "http://localhost:"+port+"/data.php",  // 请求的URL
             method: "POST",  // 请求方法，可选项包括 "GET", "POST", "PUT", "DELETE" 等.
             data: ehid,  // 请求参数，如果不需要传递参数可以省略
             success: function(response) {
@@ -100,7 +102,7 @@ text-align: center;
         $("#f_search").change(function(){
             var kw=$("#f_search").val();
             kw=kw.replace(/\(.*?\)/g,'');
-            kw=kw.replace('~','');
+            kw=kw.replaceAll('~','');
             kw=kw.replace('.zip','');
             if(!isNaN(kw.substring(0,kw.indexOf("-")))){
                 kw=kw.substring(kw.indexOf("-")+1,kw.length);
@@ -119,7 +121,7 @@ text-align: center;
             ehid.push("/"+ehurl[4]+"/");
         });
         $.ajax({
-            url: "http://localhost:8080/data.php",  // 请求的URL
+            url: "http://localhost:"+port+"/data.php",  // 请求的URL
             method: "POST",  // 请求方法，可选项包括 "GET", "POST", "PUT", "DELETE" 等.
             data: JSON.stringify(ehid),  // 请求参数，如果不需要传递参数可以省略
             success: function(response){
