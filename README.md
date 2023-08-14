@@ -13,7 +13,7 @@ https://github.com/SchneeHertz/exhentai-manga-manager
 
 2.将date.php放入apache根目录
 
-3.启动apache服务，确认端口端口号，js脚本内默认为8080端口，可自行修改
+3.启动apache服务，确认端口号，js脚本内默认为8080端口，可自行修改
 
 4.浏览器上安装tampermonkey并安装js脚本
 
