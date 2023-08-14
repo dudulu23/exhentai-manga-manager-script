@@ -1,3 +1,4 @@
+## 功能
 exhentai-manga-manager的附加浏览器脚本
 
 https://github.com/SchneeHertz/exhentai-manga-manager
@@ -6,7 +7,7 @@ https://github.com/SchneeHertz/exhentai-manga-manager
 
 通过php访问本地C:\Users\w\AppData\Roaming\exhentai-manga-manager\database.sqlite 来显示该漫画是否下载
 
-使用方法
+## 使用方法
 
 1.安装apache php 当前使用的php版本为7.3.4，确认php.ini内extension=pdo_sqlite 前面没有分号以启用pdo_sqlite功能
 
@@ -21,7 +22,7 @@ https://github.com/SchneeHertz/exhentai-manga-manager
 6.点击“已下载”或“未下载”可提取对应的元数据，利用剪切板将信息输入exhentai-manga-manager，录入成功后e站就对应的漫画会变成已下载
 
 
-其他修改
+## 其他修改
 
 1.右键搜索栏会清除搜索栏内的文字
 
