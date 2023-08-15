@@ -191,13 +191,13 @@ text-align: center;
             metaobj.filesize = gmetadata.filesize
             metaobj.status = 'tagged'
             navigator.clipboard.writeText(JSON.stringify(metaobj))
+            $('.copyed').fadeIn(); // 元素开始时显示
 
+            setTimeout(function() {
+                $('.copyed').fadeOut(); // 5秒后元素消失
+            }, 2000);
 
         })
-        $('.copyed').fadeIn(); // 元素开始时显示
 
-        setTimeout(function() {
-            $('.copyed').fadeOut(); // 5秒后元素消失
-        }, 2000);
     }
 })();
