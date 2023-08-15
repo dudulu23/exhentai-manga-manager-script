@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ehentai显示已下载 提取页面元数据
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  try to take over the world!
 // @author       You
 // @match        *exhentai.org/*
@@ -57,6 +57,7 @@ text-align: center;
 }
     `);
     'use strict';
+    //端口修改
     var port=8080;
     var ehid;
 
@@ -180,7 +181,7 @@ text-align: center;
                 }
             })
             metaobj.tags = tags
-            metaobj.url = window.location.href
+            metaobj.url = url
             metaobj.title = gmetadata.title
             metaobj.title_jpn = gmetadata.title_jpn
             metaobj.rating = +gmetadata.rating
