@@ -3,14 +3,11 @@ exhentai-manga-manager的附加浏览器脚本
 
 https://github.com/SchneeHertz/exhentai-manga-manager
 
-1.2 加入了可在e站显示是否已下载该漫画的功能
+1.下载漫画,在搜索页面（略缩图模式）点击原本下载torrents箭头即可开始下载，在漫画页面点击"未下载"开始下载，并在下载漫画后自动向metadata.sqlite写入元数据，当图片加载失败时会自动重载，下载到一半的漫画可以继续下载。
 
+2.在网页端按提取元数据后尝试直接写入数据库，如果失败后和之前版本一样用剪切板录入数据
 
-1.3 在网页端按提取元数据后尝试直接写入数据库，如果失败后和之前版本一样用剪切板录入数据，添加端口号设置和数据库路径设置
-
-1.4 适配新版数据库分离
-
-通过php访问本地C:\Users\用户名\AppData\Roaming\exhentai-manga-manager\database.sqlite 来显示该漫画是否下载
+3. 可在e站显示是否已下载该漫画（因为下载功能并没有向database.sqlite写入数据，所以通在搜索页面不会直接显示已下载，需要打开exhentai-manga-manager扫描新的漫画后更新database.sqlite才会更改为已下载）
 
 ## 使用方法
 
@@ -22,12 +19,9 @@ https://github.com/SchneeHertz/exhentai-manga-manager
 
 4.浏览器上安装tampermonkey并安装js脚本
 
-5.设置端口号和数据库路径
+5.点击上方的“点击设置”设置端口号，数据库路径，meta路径和下载路径
 
 5.e站改为略缩图模式，略缩图下方会显示是否在exhentai-manga-manager里有记录
-
-6.点击“已下载”或“未下载”可直接在数据库里写入对应的元数据，如果失败的话就利用剪切板将信息输入exhentai-manga-manager，录入成功后e站就对应的漫画会变成已下载
-
 
 ## 其他修改
 
@@ -37,5 +31,9 @@ https://github.com/SchneeHertz/exhentai-manga-manager
 
 3.当页面搜索出的漫画数量只有一个时会自动复制当前漫画的元数据
 
+## 注意事项
+不要打开过多的下载窗口
+
+下载不动时点击下载窗口数字能刷新页面
 
 
