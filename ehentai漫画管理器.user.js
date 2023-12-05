@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ehentai漫画管理器
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.5.1
 // @license      MIT
 // @description  exhentai-manga-manager的附加浏览器脚本
 // @author       You
@@ -318,11 +318,25 @@ cursor: pointer;
                     //单张页面链接下载单张
                     async function downloadPage(urlarr,i,reload){
                         if(urlarr[i]!=0&&i<urlarr.length){
-                            const response = await fetch(urlarr[i]).catch(error => {
-                                 downloadPage(urlarr,i,reload);
-                            });
-                            const html = await response.text();
 
+                            async function fetchData(url,cou) {
+                                try {
+                                    const response = await fetch(url);
+                                    const html =await response.text();
+                                    return html;
+                                } catch (error) {
+                                    console.error(error);
+                                    // 请求失败，则重新发起请求
+                                    cou++;
+                                    if(cou>=10){
+                                         window.location.reload();
+                                    }else{
+                                         return fetchData(url,cou);
+                                    }
+
+                                }
+                            }
+                            const html =await fetchData(urlarr[i],1);
                             var imageUrl;
                             var imageLinks = [];
                             var imgRegex = /<img\s[^>]*?\bid=['"]img['"][^>]*?src=['"](.*?)['"]/g;
@@ -362,8 +376,14 @@ cursor: pointer;
                     }
                     //循环下载
                     async function alAll(urlarr){
-            
-                        for(var a=0;a<urlarr.length;a++){
+
+                        for(let a=0;a<urlarr.length;a=a+3){
+                            await downloadPage(urlarr,a,1);
+                        }
+                        for(let a=1;a<urlarr.length;a=a+3){
+                            await downloadPage(urlarr,a,1);
+                        }
+                        for(let a=2;a<urlarr.length;a=a+3){
                             await downloadPage(urlarr,a,1);
                         }
                     }
@@ -694,41 +714,50 @@ cursor: pointer;
         //向上取余
         var  pagecont=Math.floor((Length-0 + onepageSize - 1) / onepageSize);
         var ajaxRequests = [];
+        function ppp(url, i,cou) {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: url + "&p=" + i,
+                    method: 'GET',
+                    success: function(response) {
+                        const html = response;
+                        const pattern = /<a\s+(?:[^>]*?\s+)?href=(['"])(.*?)\1/g;
+                        const divPattern = /<div\s+id="gdt"[^>]*>(.*?)class="gtb"/g;
 
-        for(var i=0;i<=(pagecont-1);i++){
-            ajaxRequests.push($.ajax({
-                url:url+"&p="+i,
-                method: 'GET',
-                success: function(response) {
-
-                    //获取下载链接
-                    const html = response;
-                    const pattern = /<a\s+(?:[^>]*?\s+)?href=(['"])(.*?)\1/g;
-                    const divPattern = /<div\s+id="gdt"[^>]*>(.*?)class="gtb"/g;
-
-                    let match;
-                    let divmatch;
-                    divmatch=divPattern.exec(html)
-                    while ((match = pattern.exec(divmatch[0])) !== null) {
-                        if (match[2].includes('/s/')) {
-                            links.push(match[2]);
+                        let match;
+                        let divmatch;
+                        divmatch = divPattern.exec(html)
+                        while ((match = pattern.exec(divmatch[0])) !== null) {
+                            if (match[2].includes('/s/')) {
+                                links.push(match[2]);
+                            }
                         }
+                        resolve(); // 请求成功后resolve Promise
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('请求错误:', error);
+
+                        cou++;
+                        if(cou>=10){
+                            window.location.reload();
+                        }else{
+                            return ppp(url, i,cou)
+                        }
+
                     }
-
-
-                },
-                error: function(xhr, status, error) {
-                    // 在这里处理请求错误
-                    console.log('请求错误:', error);
-                }
-            }));
-        }
-        return new Promise((resolve, reject) => {
-            $.when.apply($, ajaxRequests).done(function() {
-                resolve(); // 所有异步请求完成后resolve Promise
-            }).fail(function() {
-                reject(); // 如果有任何一个请求失败，则reject Promise
+                });
             });
+        }
+
+
+        for (var i = 0; i <= (pagecont - 1); i++) {
+            ajaxRequests.push(ppp(url, i,1));
+        }
+
+        return Promise.all(ajaxRequests).then(function() {
+            // 所有异步请求完成后的处理
+        }).catch(function() {
+            // 如果有任何一个请求失败，则进行错误处理
         });
     }  
 })();

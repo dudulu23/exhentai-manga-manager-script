@@ -43,7 +43,6 @@ if($fun=='updateDatabase'){
 }
 if($fun=='download'){
     $downloadPath = $_POST['downloadPath'];
-    set_time_limit(600);
     $page= $_POST['page'];
     $imageUrl= $_POST['imageUrl'];
     $filename = $_POST['filename'];
@@ -53,20 +52,29 @@ if($fun=='download'){
         mkdir($dirPath, 0777, true);
     }
     $savePath = $dirPath.'/'.$page.".jpg";
-    //下载图片并保存到指定位置
-    $data=file_get_contents($imageUrl);
-    
-    if ($data === false) {
-      echo '下载文件失败';
-    } else {
-      $result = file_put_contents($savePath,$data); // 将文件保存到指定的路径
+ 
+    if (!file_exists($savePath)||filesize($savePath)==0) {
+        
 
-      if ($result === false) {
-        echo '保存文件失败';
-      } else {
-        echo '文件已成功下载并保存到 ' . $savePath;
-      }
+        //下载图片并保存到指定位置
+        $data=file_get_contents($imageUrl);
+        
+        if ($data === false) {
+          echo '下载文件失败';
+         } else {
+          $result = file_put_contents($savePath,$data); // 将文件保存到指定的路径
+
+          if ($result === false) {
+            echo '保存文件失败';
+          } else {
+            echo '文件已成功下载并保存到 ' . $savePath;
+          }
+        }
+       
+    }else{
+         echo '(已存在)文件已成功下载并保存到 ' . $savePath;
     }
+    
 
 
 
@@ -85,10 +93,7 @@ if($fun=='download'){
     // curl_close($ch);
     // fclose($fp);
 } 
-//图片计数
-if($fun=='page_count'){
 
-}
 //已下载图片显示
 if($fun=='page_check'){
     $downloadPath = $_POST['downloadPath'];
